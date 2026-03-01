@@ -1,11 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Proyecto - Sistema de Intercambio de Regalos</title>
+    <title>Intercambio en la Cabaña</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    
+<body class="bg-[#120e0a] w-screen h-screen overflow-hidden font-sans relative flex items-center justify-center">
+
+    <img src="assets/fondo-wide.png" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de Cabaña">
+
+    <main id="escena-cabana" class="relative w-full max-w-[1920px] aspect-video z-10 transition-transform duration-1000 origin-bottom">
+        
+        <img src="assets/fogata.png" class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[40%] z-10" alt="Hoguera">
+
+        <img src="assets/sofa.png" class="absolute top-[18%] left-[-5%] w-[45%] z-20" alt="Sillón naranja">
+
+        <img src="assets/puff-derecha.png" class="absolute top-[30%] right-[6%] w-[34%] z-20" alt="Puff verde">
+
+        <img src="assets/mesa-con-lampara.png" class="absolute top-[43%] right-[2%] w-[14%] z-30" alt="Mesita con lámpara">
+
+        <img src="assets/puff-gato.png" class="absolute bottom-[-10%] w-[35%] z-30" alt="Gato durmiendo">
+
+        <img src="assets/madejas.png" class="absolute bottom-[20%] right-[15%] w-[12%] z-30" alt="Canasta de hilos">
+
+        <img src="assets/mesa-central.png" id="mesa-trigger" class="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] z-40 cursor-pointer hover:scale-105 transition-transform duration-300 drop-shadow-2xl" alt="Mesa con libreta">
+
+    </main>
+
+    <section id="ui-intercambio" class="absolute inset-0 z-50 hidden opacity-0 transition-opacity duration-1000 flex items-center justify-center p-4">
+        </section>
+
+    <script src="js/storage.js"></script>
+    <script src="js/dragdrop.js"></script>
+    <script src="js/sorteo.js"></script>
+    <script src="js/main.js"></script>
+
 </body>
 </html>
