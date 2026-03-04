@@ -1,1 +1,100 @@
-/*AQUI IRAN LOS ESTILOS QUE NO VENGAN CON TAILWIND*/
+/* Animación mesa*/
+#mesa-trigger {
+    cursor: pointer;
+    transition: margin-bottom 0.3s ease, filter 0.3s ease;
+    margin-bottom: 0;
+}
+
+#mesa-trigger:hover {
+    margin-bottom: 20px;
+    filter: drop-shadow(0 20px 0px rgba(255, 200, 0, 0.6));
+}
+
+/* Utilidades 3D para el libro */
+.preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotar-reverso { transform: rotateY(180deg); }
+
+/* Animación del libro cerrado */
+@keyframes jump-pixel {
+    0%, 100% { transform: translateY(0) scale(1); }
+    10% { transform: translateY(-5px) scale(1); } 
+    30% { transform: translateY(-25px) scale(1.02); } 
+    50% { transform: translateY(0) scale(1); }
+    60% { transform: translateY(-8px) scale(1); }
+    80% { transform: translateY(0) scale(1); }
+}
+
+.animate-jump-pixel {
+    animation: jump-pixel 1.8s ease-out infinite;
+    animation-play-state: running;
+}
+
+/* Detener el brinco al pasar el mouse*/
+#libro-cerrado-container:hover {
+    animation-play-state: paused;
+}
+
+/* Animación de la flecha */
+@keyframes bounce-horizontal {
+    0%, 100% { transform: translateX(0) translateY(-50%); }
+    50% { transform: translateX(10px) translateY(-50%); }
+}
+
+.animate-bounce-horizontal {
+    animation: bounce-horizontal 0.8s ease-in-out infinite;
+}
+
+/* Animacion del libro al abrirse */
+#el-libro.is-open {
+    transform: translateX(50%);
+    display: block;
+}
+
+#el-libro.is-open .portada-principal {
+    transform: rotateY(-180deg);
+}
+
+#el-libro.is-open .hoja-extra-1 {
+    transform: rotateY(-175deg);
+}
+
+#el-libro.is-open .hoja-extra-2 {
+    transform: rotateY(-170deg);
+}
+
+/* Ilumina el vaso cuando este el papel encima*/
+.vaso-dragover {
+    background-color: rgba(147, 197, 253, 0.8) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8) !important;
+}
+
+/* Estilo del papelito que cae en el vaso */
+.papel-arrugado {
+    width: auto;
+    padding: 2px 8px;
+    background-color: white;
+    border: 2px solid black;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1), 2px 2px 0 rgba(0,0,0,1);
+    transition: transform 0.3s;
+    margin: 2px;
+}
+
+/* Animación de caída desde arriba */
+@keyframes caer-al-vaso {
+    0% {
+        transform: translateY(-200px) scale(1.5) rotate(0deg);
+        opacity: 0;
+    }
+    50% { opacity: 1; }
+    100% {
+        transform: translateY(0) scale(1) rotate(var(--rotacion-final));
+    }
+}
+
+.animacion-caida {
+    animation: caer-al-vaso 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
