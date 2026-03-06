@@ -1,4 +1,6 @@
-/* Animación mesa*/
+/* =========================================
+   EFECTO DE LA MESA (Solo levantarse)
+   ========================================= */
 #mesa-trigger {
     cursor: pointer;
     transition: margin-bottom 0.3s ease, filter 0.3s ease;
@@ -10,12 +12,16 @@
     filter: drop-shadow(0 20px 0px rgba(255, 200, 0, 0.6));
 }
 
-/* Utilidades 3D para el libro */
+/* =========================================
+   UTILIDADES 3D PARA EL LIBRO
+   ========================================= */
 .preserve-3d { transform-style: preserve-3d; }
 .backface-hidden { backface-visibility: hidden; }
 .rotar-reverso { transform: rotateY(180deg); }
 
-/* Animación del libro cerrado */
+/* =========================================
+   ANIMACIÓN BRINCO PARA EL LIBRO CERRADO
+   ========================================= */
 @keyframes jump-pixel {
     0%, 100% { transform: translateY(0) scale(1); }
     10% { transform: translateY(-5px) scale(1); } 
@@ -30,12 +36,14 @@
     animation-play-state: running;
 }
 
-/* Detener el brinco al pasar el mouse*/
+/* Detener el brinco al pasar el mouse */
 #libro-cerrado-container:hover {
     animation-play-state: paused;
 }
 
-/* Animación de la flecha */
+/* =========================================
+   ANIMACIÓN DE LA FLECHA
+   ========================================= */
 @keyframes bounce-horizontal {
     0%, 100% { transform: translateX(0) translateY(-50%); }
     50% { transform: translateX(10px) translateY(-50%); }
@@ -45,7 +53,9 @@
     animation: bounce-horizontal 0.8s ease-in-out infinite;
 }
 
-/* Animacion del libro al abrirse */
+/* =========================================
+   ANIMACION DEL LIBRO AL ABRIRSE
+   ========================================= */
 #el-libro.is-open {
     transform: translateX(50%);
     display: block;
@@ -63,13 +73,20 @@
     transform: rotateY(-170deg);
 }
 
-/* Ilumina el vaso cuando este el papel encima*/
+/* =========================================
+   ZONA DRAG & DROP Y PAPELITOS PIXEL ART
+   ========================================= */
+
+/* Ilumina el vaso cuando le arrastras un papel encima */
+/* Ilumina el vaso cuando le arrastras un papel encima (Estilo Pixel Art) */
 .vaso-dragover {
-    background-color: rgba(147, 197, 253, 0.8) !important;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8) !important;
+    background-color: #93c5fd !important; /* Azul más claro */
+    transform: scale(1.05); /* Que crezca un poquito */
+    /* Sombra sólida más profunda en lugar de resplandor borroso */
+    box-shadow: 12px 12px 0 #000, inset -10px -10px 0 rgba(30,58,138,0.2) !important;
 }
 
-/* Estilo del papelito que cae en el vaso */
+/* Estilo del papelito arrugado que cae en el vaso */
 .papel-arrugado {
     width: auto;
     padding: 2px 8px;
@@ -97,4 +114,79 @@
 
 .animacion-caida {
     animation: caer-al-vaso 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Animación para que el papel salga volando del vaso */
+@keyframes volar-del-vaso {
+    0% {
+        transform: translateY(0) scale(1) rotate(var(--rotacion-final));
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-300px) scale(1.5) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.animacion-salida {
+    /* Usamos !important para sobreescribir la animación de caída */
+    animation: volar-del-vaso 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+    pointer-events: none;
+}
+
+/* =========================================
+   ANIMACIONES DEL CALENDARIO Y EFECTO ZOOM OUT
+   ========================================= */
+
+/* Esta clase aleja el libro y lo desenfoca */
+.libro-alejado {
+    /* El !important evita que el JS que lo movió a la izquierda lo sobreescriba */
+    transform: translateX(-15%) scale(0.85) !important; 
+    filter: blur(4px) brightness(0.6);
+    pointer-events: none; /* Nadie puede tocar el libro mientras esté lejos */
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Estilo para los cuadritos de los días */
+.dia-calendario {
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0 #000;
+    transition: all 0.1s;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.dia-calendario:hover:not(.vacio) {
+    background-color: #a0c4ff;
+    transform: translateY(-2px);
+}
+
+.dia-calendario:active:not(.vacio) {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+/* Día vacío para alinear el primer día del mes */
+.dia-calendario.vacio {
+    background-color: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    cursor: default;
+}
+
+@keyframes shake-pixel {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(8px, -8px); }
+    50% { transform: translate(-8px, 8px); }
+    75% { transform: translate(8px, 8px); }
+    100% { transform: translate(0, 0); }
+}
+
+.animate-shake-pixel {
+    animation: shake-pixel 0.2s ease-in-out infinite;
 }
