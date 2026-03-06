@@ -15,7 +15,7 @@ function cargarPaginaParticipantes(nombreOrganizador, organizadorParticipa) {
             <div class="bg-white/60 p-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,1)] text-center">
                 <p class="text-[10px] font-bold uppercase mb-2">1. Escribe el nombre</p>
                 <input type="text" id="nuevo-participante" class="w-full bg-white border-4 border-black p-2 text-sm focus:outline-none mb-4 text-center" placeholder="Nombre...">
-                <p class="text-[10px] font-bold uppercase mb-2">2. Arrastra a la urna ➔</p>
+                <p class="text-[10px] font-bold uppercase mb-2">2. Arrastra al vasito ➔</p>
                 <div id="papel-draggable" draggable="true" class="w-16 h-16 bg-white border-4 border-black flex items-center justify-center cursor-grab shadow-[4px_4px_0_#000] hover:bg-gray-200 text-3xl mx-auto transition-transform hover:scale-105">📄</div>
             </div>
         </div>
