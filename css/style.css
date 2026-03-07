@@ -242,3 +242,11 @@
     /* Mantenemos el translate(-50%) para el centrado horizontal de Tailwind y agregamos la animación */
     animation: respiracion-logo 6s infinite ease-in-out;
 }
+
+
+@media (max-height: 700px) {
+    #contenedor-libro { transform: scale(0.65) !important; }
+}
+@media (max-height: 550px) {
+    #contenedor-libro { transform: scale(0.45) !important; }
+}
