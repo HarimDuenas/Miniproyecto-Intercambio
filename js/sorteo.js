@@ -60,7 +60,9 @@ function iniciarCeremoniaSorteo() {
                     modalLibreta.classList.add('opacity-0');
                     
                     setTimeout(() => {
-                        vasoExterno.classList.add('hidden');
+                        vasoExterno.style.cssText = ""; 
+                        vasoExterno.classList.add('hidden', 'right-[5%]', 'md:right-[15%]', 'top-1/2', '-translate-y-1/2');
+                        
                         modalLibreta.classList.add('hidden');
                         modalLibreta.classList.remove('flex');
                         
@@ -92,7 +94,8 @@ function iniciarCeremoniaSorteo() {
                 setTimeout(() => {
                     vasoExterno.style.opacity = "0";
                     setTimeout(() => {
-                        vasoExterno.classList.add('hidden');
+                        vasoExterno.style.cssText = "";
+                        vasoExterno.classList.add('hidden', 'right-[5%]', 'md:right-[15%]', 'top-1/2', '-translate-y-1/2');
                         
                         if (Libro) {
                             Libro.style.opacity = "1";
@@ -378,6 +381,35 @@ function confirmarBorrarSorteo() {
             
             // Regresamos la imagen de la mesa a la normalidad
             document.getElementById('sobres-trigger').classList.add('hidden');
+
+            const Libro = document.getElementById('el-libro');
+            if (Libro) {
+                Libro.classList.remove('is-open');
+                Libro.style.opacity = "1";
+                Libro.style.pointerEvents = "auto";
+            }
+
+            // Usamos las variables guardadas en main.js para restaurar el diseño
+            const pagIzquierda = document.getElementById('pagina-izquierda');
+            const pagDerecha = document.getElementById('pagina-derecha');
+            
+            if (pagIzquierda && pagDerecha && typeof htmlIzquierdaOriginal !== 'undefined') {
+                pagIzquierda.innerHTML = htmlIzquierdaOriginal;
+                pagDerecha.innerHTML = htmlDerechaOriginal;
+                
+                // Volvemos a encender los botones de la portada
+                if (typeof activarEventosOrganizador === 'function') {
+                    activarEventosOrganizador();
+                }
+            }
+            
+            Swal.fire({
+                title: '¡Borrado!',
+                text: 'El sorteo se eliminó. Ya puedes abrir la libreta para configurar de nuevo.',
+                icon: 'success',
+                background: '#f4ebd0',
+                customClass: { popup: 'border-4 border-black font-mono' }
+            });
         }
     });
 }

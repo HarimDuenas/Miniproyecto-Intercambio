@@ -20,8 +20,50 @@ function sincronizarDatos() {
 
 // Funcion para los botones de la parte del organizador
 function activarEventosOrganizador() {
+    const inputNombreEvento = document.getElementById('nombre-evento');
+    const inputNombreOrg = document.getElementById('nombre-organizador');
+    const checkboxParticipa = document.getElementById('participa-organizador');
+    
     const btnSiguiente = document.getElementById('btn-siguiente');
     const btnCerrar = document.getElementById('btn-cerrar');
+    const btnReiniciar = document.getElementById('btn-reiniciar-todo');
+
+    // Autocompletamos datos si ya existen en localStorage ---
+    if (inputNombreEvento && datosIntercambio.evento.nombre && datosIntercambio.evento.nombre !== "Intercambio Sorpresa" && datosIntercambio.evento.nombre !== "Intercambio UAA 2026") {
+        inputNombreEvento.value = datosIntercambio.evento.nombre;
+    }
+    if (inputNombreOrg && datosIntercambio.organizador.nombre) {
+        inputNombreOrg.value = datosIntercambio.organizador.nombre;
+    }
+    if (checkboxParticipa) {
+        checkboxParticipa.checked = datosIntercambio.organizador.participa;
+    }
+
+    // Lógica del botón reiniciar
+    if (btnReiniciar) {
+        btnReiniciar.addEventListener('click', () => {
+            Swal.fire({
+                title: '¿REINICIAR TODO EL EVENTO?',
+                text: 'Se borrarán el organizador, participantes, exclusiones y presupuesto. ¡Empezarás desde cero!',
+                icon: 'arning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, borrar todo',
+                cancelButtonText: 'Cancelar',
+                background: '#f4ebd0',
+                customClass: {
+                    popup: 'border-4 border-black rounded-none shadow-[8px_8px_0_#000] font-mono',
+                    confirmButton: 'bg-red-500 text-white border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_#000] hover:translate-y-1 hover:shadow-none transition-all',
+                    cancelButtonText: 'bg-gray-400 text-black border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_#000] ml-2 hover:translate-y-1 hover:shadow-none transition-all'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.removeItem("intercambio_uaa_2026");
+                    location.reload();
+                }
+            });
+        });
+    }
 
     if (btnCerrar) {
         btnCerrar.addEventListener('click', () => {
@@ -38,28 +80,30 @@ function activarEventosOrganizador() {
 
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', () => {
-            const inputNombre = document.getElementById('nombre-organizador');
-            const participa = document.getElementById('participa-organizador').checked;
-            if (inputNombre.value.trim() === '') {
+            if (inputNombreOrg.value.trim() === '') {
                 Swal.fire({
                     title: '¡Falta el nombre!',
                     text: 'Por favor, ingresa el nombre del organizador.',
                     icon: 'warning',
                     background: '#f4ebd0',
-                    color: '#000',
                     customClass: {
                         popup: 'border-4 border-black rounded-none shadow-[8px_8px_0_rgba(0,0,0,1)] font-mono',
                         confirmButton: 'bg-[#facc15] text-black border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all'
                     },
                     buttonsStyling: false
                 });
-                inputNombre.focus();
+                inputNombreOrg.focus();
                 return;
             }
-            datosIntercambio.organizador.nombre = inputNombre.value.trim();
-            datosIntercambio.organizador.participa = participa;
-            sincronizarDatos();
-            cargarPaginaParticipantes(datosIntercambio.organizador.nombre, participa);
+
+            // Asignar los valores a nuestro objeto
+            // Si el usuario deja el nombre del evento en blanco, le ponemos un nombre por defecto
+            datosIntercambio.evento.nombre = inputNombreEvento.value.trim() || "Intercambio Sorpresa";
+            datosIntercambio.organizador.nombre = inputNombreOrg.value.trim();
+            datosIntercambio.organizador.participa = checkboxParticipa.checked;
+            
+            sincronizarDatos(); 
+            cargarPaginaParticipantes(datosIntercambio.organizador.nombre, checkboxParticipa.checked);
         });
     }
 }
@@ -101,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 350);
 
         setTimeout(() => {
+            pantallaInicio.classList.remove('flex');
             pantallaInicio.classList.add('hidden');
             escenaCabana.classList.remove('hidden'); 
             void escenaCabana.offsetWidth; 
@@ -149,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
             Libro.classList.remove('is-open');
             Libro.style.transform = ""; 
+            document.getElementById('trigger-abrir').classList.remove('hidden');
             document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
             setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
         }

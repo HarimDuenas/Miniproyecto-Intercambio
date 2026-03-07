@@ -70,10 +70,47 @@ function cargarPaginaPresupuesto() {
         </div>
     `;
 
-    // Esto es por si selecciona le de una fecha ya puesta
-    const selectMotivo = document.getElementById('motivo-intercambio');
-    const btnFecha = document.getElementById('btn-seleccionar-fecha');
+    // Autocompletamos los datos del evento si ya existen
+    const ev = datosIntercambio.evento;
 
+    // Autocompletamos motivo
+    const selectMotivo = document.getElementById('motivo-intercambio');
+    if(ev.tipo) {
+        selectMotivo.value = ev.tipo;
+    }
+
+    // Autocompletamos fecha
+    const btnFecha = document.getElementById('btn-seleccionar-fecha');
+    if(ev.fecha) {
+        const partesFecha = ev.fecha.split('-'); // Separamos la fecha de su formato YYYY-MM-DD
+        if(partesFecha.length === 3) {
+            const mesesStr = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            btnFecha.textContent = `${partesFecha[2]} de ${mesesStr[parseInt(partesFecha[1])-1]} del ${partesFecha[0]} 📅`;
+            btnFecha.classList.add('bg-[#4ade80]');
+        }
+    }
+
+    // Autocompletamos presupuesto
+    if(ev.presupuesto > 0){
+        const btnPresup = Array.from(document.querySelectorAll('.btn-presup')).find(b => parseInt(b.dataset.valor) === ev.presupuesto);;
+
+        if(btnPresup && ev.presupuesto !== 0) {
+            // Es un botón predefinido ($100, $200, $500)
+            document.querySelectorAll('.btn-presup').forEach(b => { b.classList.remove('bg-[#4ade80]'); b.classList.add('bg-white'); });
+            btnPresup.classList.replace('bg-white', 'bg-[#4ade80]');
+        } else {
+            // Es un presupuesto personalizado ("Otro")
+            document.querySelectorAll('.btn-presup').forEach(b => { b.classList.remove('bg-[#4ade80]'); b.classList.add('bg-white'); });
+            const btnOtro = Array.from(document.querySelectorAll('.btn-presup')).find(b => b.dataset.valor === "0");
+            if (btnOtro) btnOtro.classList.replace('bg-white', 'bg-[#4ade80]');
+            
+            const inputP = document.getElementById('presupuesto-personalizado');
+            inputP.value = ev.presupuesto;
+            inputP.classList.remove('hidden');
+        }
+    }
+
+    // Esto es por si selecciona de una fecha ya puesta
     selectMotivo.addEventListener('change', (e) => {
         const motivo = e.target.value;
         let fechaAuto = "";
@@ -164,11 +201,34 @@ function renderizarCalendario() {
         const dia = Object.assign(document.createElement('div'), {className: 'dia-calendario', textContent: i});
         dia.addEventListener('click', () => {
             const mesesStr = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const fStr = `${i} de ${mesesStr[fechaActual.getMonth()]} del ${fechaActual.getFullYear()}`;
+            const fStr = `${i} de ${mesesStr[fechaActual.getMonth()]} del ${fechaActual.getFullYear()} 📅`;
             const btn = document.getElementById('btn-seleccionar-fecha');
+
             btn.textContent = fStr;
             btn.classList.add('bg-[#4ade80]');
             datosIntercambio.evento.fecha = `${fechaActual.getFullYear()}-${fechaActual.getMonth()+1}-${i}`;
+            
+            // Verificamos qué fecha eligió el usuario para cambiar el motivo
+            const selectMotivo = document.getElementById('motivo-intercambio');
+            const mesElegido = fechaActual.getMonth() + 1;
+            
+            if (mesElegido === 12 && i === 25) {
+                selectMotivo.value = "Navidad";
+                datosIntercambio.evento.tipo = "Navidad";
+            } else if (mesElegido === 2 && i === 14) {
+                selectMotivo.value = "San Valentín";
+                datosIntercambio.evento.tipo = "San Valentín";
+            } else if (mesElegido === 1 && i === 1) {
+                selectMotivo.value = "Año Nuevo";
+                datosIntercambio.evento.tipo = "Año Nuevo";
+            } else {
+                selectMotivo.value = "Otro";
+                datosIntercambio.evento.tipo = "Otro";
+            }
+            
+            // Guardamos los cambios en LocalStorage
+            sincronizarDatos();
+            
             cerrarCalendario();
         });
         grid.appendChild(dia);
