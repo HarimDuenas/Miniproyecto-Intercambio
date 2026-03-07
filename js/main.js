@@ -66,27 +66,36 @@ function activarEventosOrganizador() {
 
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', () => {
-            const inputNombre = document.getElementById('nombre-organizador');
+            // Referencias a los inputs
+            const inputNombreEvento = document.getElementById('nombre-evento');
+            const inputNombreOrg = document.getElementById('nombre-organizador');
             const participa = document.getElementById('participa-organizador').checked;
-            if (inputNombre.value.trim() === '') {
+            
+            // Validar que el organizador tenga nombre
+            if (inputNombreOrg.value.trim() === '') {
                 Swal.fire({
                     title: '¡Falta el nombre!',
                     text: 'Por favor, ingresa el nombre del organizador.',
                     icon: 'warning',
                     background: '#f4ebd0',
-                    color: '#000',
                     customClass: {
                         popup: 'border-4 border-black rounded-none shadow-[8px_8px_0_rgba(0,0,0,1)] font-mono',
                         confirmButton: 'bg-[#facc15] text-black border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all'
                     },
                     buttonsStyling: false
                 });
-                inputNombre.focus();
+                inputNombreOrg.focus();
                 return;
             }
-            datosIntercambio.organizador.nombre = inputNombre.value.trim();
+
+            // Asignar los valores a nuestro objeto
+            // Si el usuario deja el nombre del evento en blanco, le ponemos un nombre por defecto
+            datosIntercambio.evento.nombre = inputNombreEvento.value.trim() || "Intercambio Sorpresa";
+            datosIntercambio.organizador.nombre = inputNombreOrg.value.trim();
             datosIntercambio.organizador.participa = participa;
-            sincronizarDatos();
+            
+            sincronizarDatos(); // Guardar en LocalStorage
+            
             cargarPaginaParticipantes(datosIntercambio.organizador.nombre, participa);
         });
     }
