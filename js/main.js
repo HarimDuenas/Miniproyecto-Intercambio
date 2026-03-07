@@ -20,14 +20,28 @@ function sincronizarDatos() {
 
 // Funcion para los botones de la parte del organizador
 function activarEventosOrganizador() {
+    const inputNombreEvento = document.getElementById('nombre-evento');
+    const inputNombreOrg = document.getElementById('nombre-organizador');
+    const checkboxParticipa = document.getElementById('participa-organizador');
+    
     const btnSiguiente = document.getElementById('btn-siguiente');
     const btnCerrar = document.getElementById('btn-cerrar');
+    const btnReiniciar = document.getElementById('btn-reiniciar-todo');
 
-    const btnReiniciarTodo = document.getElementById('btn-reiniciar-todo');
+    // Autocompletamos datos si ya existen en localStorage ---
+    if (inputNombreEvento && datosIntercambio.evento.nombre && datosIntercambio.evento.nombre !== "Intercambio Sorpresa" && datosIntercambio.evento.nombre !== "Intercambio UAA 2026") {
+        inputNombreEvento.value = datosIntercambio.evento.nombre;
+    }
+    if (inputNombreOrg && datosIntercambio.organizador.nombre) {
+        inputNombreOrg.value = datosIntercambio.organizador.nombre;
+    }
+    if (checkboxParticipa) {
+        checkboxParticipa.checked = datosIntercambio.organizador.participa;
+    }
 
-    // Lógica para borrar absolutamente todo y reiniciar
-    if (btnReiniciarTodo) {
-        btnReiniciarTodo.addEventListener('click', (e) => {
+    // Lógica del botón reiniciar
+    if (btnReiniciar) {
+        btnReiniciar.addEventListener('click', () => {
             Swal.fire({
                 title: '¿REINICIAR TODO EL EVENTO?',
                 text: 'Se borrarán el organizador, participantes, exclusiones y presupuesto. ¡Empezarás desde cero!',
@@ -44,7 +58,6 @@ function activarEventosOrganizador() {
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Borramos la llave principal del almacenamiento
                     localStorage.removeItem("intercambio_uaa_2026");
                 }
             });
@@ -66,12 +79,6 @@ function activarEventosOrganizador() {
 
     if (btnSiguiente) {
         btnSiguiente.addEventListener('click', () => {
-            // Referencias a los inputs
-            const inputNombreEvento = document.getElementById('nombre-evento');
-            const inputNombreOrg = document.getElementById('nombre-organizador');
-            const participa = document.getElementById('participa-organizador').checked;
-            
-            // Validar que el organizador tenga nombre
             if (inputNombreOrg.value.trim() === '') {
                 Swal.fire({
                     title: '¡Falta el nombre!',
@@ -92,11 +99,10 @@ function activarEventosOrganizador() {
             // Si el usuario deja el nombre del evento en blanco, le ponemos un nombre por defecto
             datosIntercambio.evento.nombre = inputNombreEvento.value.trim() || "Intercambio Sorpresa";
             datosIntercambio.organizador.nombre = inputNombreOrg.value.trim();
-            datosIntercambio.organizador.participa = participa;
+            datosIntercambio.organizador.participa = checkboxParticipa.checked;
             
-            sincronizarDatos(); // Guardar en LocalStorage
-            
-            cargarPaginaParticipantes(datosIntercambio.organizador.nombre, participa);
+            sincronizarDatos(); 
+            cargarPaginaParticipantes(datosIntercambio.organizador.nombre, checkboxParticipa.checked);
         });
     }
 }
