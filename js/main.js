@@ -45,7 +45,7 @@ function activarEventosOrganizador() {
             Swal.fire({
                 title: '¿REINICIAR TODO EL EVENTO?',
                 text: 'Se borrarán el organizador, participantes, exclusiones y presupuesto. ¡Empezarás desde cero!',
-                icon: 'warning',
+                icon: 'arning',
                 showCancelButton: true,
                 confirmButtonText: 'Sí, borrar todo',
                 cancelButtonText: 'Cancelar',
@@ -59,6 +59,7 @@ function activarEventosOrganizador() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     localStorage.removeItem("intercambio_uaa_2026");
+                    location.reload();
                 }
             });
         });
@@ -144,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 350);
 
         setTimeout(() => {
+            pantallaInicio.classList.remove('flex');
             pantallaInicio.classList.add('hidden');
             escenaCabana.classList.remove('hidden'); 
             void escenaCabana.offsetWidth; 
