@@ -75,6 +75,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const escenaCabana = document.getElementById('escena-cabana');
     let parallaxActivo = true;
 
+    // Lógica de audio exterior
+    const audioExterior = new Audio('assets/ambientacionExterior.mp3');
+    audioExterior.loop = true; // Que se repita infinitamente
+    audioExterior.volume = 0.5; // Volumen al 50% para que no asuste
+    let audioIniciado = false;
+
+    // Función para intentar iniciar el audio con la primera interacción
+    const iniciarAudio = () => {
+        if (!audioIniciado) {
+            audioExterior.play().then(() => {
+                audioIniciado = true;
+                // Si ya inició, quitamos los eventos para no sobrecargar
+                document.removeEventListener('click', iniciarAudio);
+                document.removeEventListener('mousemove', iniciarAudio);
+            }).catch(() => {
+                // El navegador bloqueó el autoplay, esperamos al siguiente intento
+            });
+        }
+    };
+
+    // Escuchamos el primer clic o movimiento del mouse para brincarnos el bloqueo del navegador
+    document.addEventListener('click', iniciarAudio);
+    document.addEventListener('mousemove', iniciarAudio);
+    // --------------------------------
+
     // Efecto Parallax
     pantallaInicio.addEventListener('mousemove', (e) => {
         if (!parallaxActivo) return; 
@@ -88,12 +113,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Transición de entrada
+    // Transición de entrada
     btnCabana.addEventListener('click', () => {
         parallaxActivo = false;
         pantallaInicio.style.pointerEvents = 'none';
         pantallaInicio.style.transformOrigin = '46% 73%';
         pantallaInicio.style.transition = 'transform 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
         pantallaInicio.style.transform = 'scale(6)'; 
+
+        // FADE OUT DEL AUDIO EXTERIOR
+        let volumenActual = audioExterior.volume;
+        const fadeOut = setInterval(() => {
+            if (volumenActual > 0.05) {
+                volumenActual -= 0.05;
+                audioExterior.volume = Math.max(0, volumenActual); // Evita valores negativos
+            } else {
+                audioExterior.pause(); // Lo pausamos por completo
+                clearInterval(fadeOut); // Detenemos el temporizador
+            }
+        }, 150); // Le baja el volumen cada 150 milisegundos
 
         setTimeout(() => {
             fadeOverlay.classList.remove('opacity-0');
