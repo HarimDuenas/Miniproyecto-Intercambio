@@ -8,22 +8,33 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[#120e0a] w-screen h-screen overflow-hidden font-sans relative flex items-center justify-center">
+<body class="bg-[#0b0f19] w-screen h-screen overflow-hidden font-sans relative flex items-center justify-center">
 
-    <img src="assets/fondo-wide.png" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de Cabaña">
+    <section id="pantalla-inicio" class="relative w-screen h-screen overflow-hidden flex items-center justify-center z-50">
+        <img src="assets/fondo.png" class="capa-parallax absolute inset-0 w-full h-full object-cover z-0" data-speed="0.002" alt="Fondo estrellado">
 
-    <main id="escena-cabana" class="relative w-full max-w-[1920px] aspect-video z-10 transition-transform duration-1000 origin-bottom">
+        <img src="assets/cespedMedio.png" class="capa-parallax absolute inset-0 w-full h-full object-cover object-bottom z-10 pointer-events-none" data-speed="0.005" alt="Césped medio">
+
+        <div id="btn-cabana" class="capa-parallax relative z-20 mt-[22vh] cursor-pointer hover:scale-[1.02] transition-transform duration-300 drop-shadow-[0_0_20px_rgba(255,200,0,0.15)] group" data-speed="0.008">
+            <img src="assets/cabana.png" class="w-[500px] sm:w-[750px] md:w-[950px] lg:w-[1100px] object-contain" alt="Cabaña en el bosque">
+            <p class="absolute -top-12 left-1/2 -translate-x-1/2 text-white font-mono text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap bg-black/60 px-3 py-1 rounded border border-white/20">
+                Haz clic para entrar
+            </p>
+        </div>
+
+        <img src="assets/cespedFrente.png" class="capa-parallax absolute inset-0 w-full h-full object-cover object-bottom z-30 pointer-events-none" data-speed="0.015" alt="Césped frente">
+    </section>
+
+    <div id="fade-overlay" class="fixed inset-0 bg-black opacity-0 pointer-events-none z-[100] transition-opacity duration-1000"></div>
+
+    <main id="escena-cabana" class="hidden relative w-full max-w-[1920px] aspect-video z-10 transition-transform duration-1000 origin-bottom">
         
+        <img src="assets/fondo-wide.png" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de Cabaña">
         <img src="assets/fogata.png" class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[40%] z-10" alt="Hoguera">
-
         <img src="assets/sofa.png" class="absolute top-[18%] left-[-5%] w-[45%] z-20" alt="Sillón naranja">
-
         <img src="assets/puff-derecha.png" class="absolute top-[30%] right-[6%] w-[34%] z-20" alt="Puff verde">
-
         <img src="assets/mesa-con-lampara.png" class="absolute top-[43%] right-[2%] w-[14%] z-30" alt="Mesita con lámpara">
-
         <img src="assets/puff-gato.png" class="absolute bottom-[-10%] w-[35%] z-30" alt="Gato durmiendo">
-
         <img src="assets/madejas.png" class="absolute bottom-[20%] right-[15%] w-[12%] z-30" alt="Canasta de hilos">
 
         <img src="assets/mesa-central.png" id="mesa-trigger" class="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] z-40 cursor-pointer hover:scale-105 transition-transform duration-300 drop-shadow-2xl" alt="Mesa con libreta">
