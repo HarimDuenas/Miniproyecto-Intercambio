@@ -201,11 +201,34 @@ function renderizarCalendario() {
         const dia = Object.assign(document.createElement('div'), {className: 'dia-calendario', textContent: i});
         dia.addEventListener('click', () => {
             const mesesStr = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const fStr = `${i} de ${mesesStr[fechaActual.getMonth()]} del ${fechaActual.getFullYear()}`;
+            const fStr = `${i} de ${mesesStr[fechaActual.getMonth()]} del ${fechaActual.getFullYear()} 📅`;
             const btn = document.getElementById('btn-seleccionar-fecha');
+
             btn.textContent = fStr;
             btn.classList.add('bg-[#4ade80]');
             datosIntercambio.evento.fecha = `${fechaActual.getFullYear()}-${fechaActual.getMonth()+1}-${i}`;
+            
+            // Verificamos qué fecha eligió el usuario para cambiar el motivo
+            const selectMotivo = document.getElementById('motivo-intercambio');
+            const mesElegido = fechaActual.getMonth() + 1;
+            
+            if (mesElegido === 12 && i === 25) {
+                selectMotivo.value = "Navidad";
+                datosIntercambio.evento.tipo = "Navidad";
+            } else if (mesElegido === 2 && i === 14) {
+                selectMotivo.value = "San Valentín";
+                datosIntercambio.evento.tipo = "San Valentín";
+            } else if (mesElegido === 1 && i === 1) {
+                selectMotivo.value = "Año Nuevo";
+                datosIntercambio.evento.tipo = "Año Nuevo";
+            } else {
+                selectMotivo.value = "Otro";
+                datosIntercambio.evento.tipo = "Otro";
+            }
+            
+            // Guardamos los cambios en LocalStorage
+            sincronizarDatos();
+            
             cerrarCalendario();
         });
         grid.appendChild(dia);
