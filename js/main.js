@@ -1,19 +1,21 @@
-let datosIntercambio = {
+// Intentamos cargar datos previos del localStorage, si no hay, inicializamos la estructura vacía
+let datosIntercambio = cargarDeStorage() || {
     evento: { nombre: "Intercambio UAA 2026", tipo: "", fecha: "", presupuesto: 0 },
     organizador: { nombre: "", participa: false },
     participantes: [],
     resultados: []
 };
 
-// Esto les da los id's
-let ultimoIdAsignado = 0; 
+// Esto les da los id's (Buscamos el ID más alto guardado para no repetir, o empezamos en 0)
+let ultimoIdAsignado = datosIntercambio.participantes.reduce((max, p) => Math.max(max, parseInt(p.id) || 0), 0); 
 
 let htmlIzquierdaOriginal = "";
 let htmlDerechaOriginal = "";
 
-// Esta funcion es para lo del local storage si quieres lo puedes pasar al storage.js hermano y mandarlo a llamar aqui
+// Esta función se llama cada vez que modificamos algo (agregamos participante, exclusión, etc.)
 function sincronizarDatos() {
-    console.log("Datos actualizados:", datosIntercambio);
+    guardarEnStorage(datosIntercambio);
+    console.log("Datos guardados en localStorage exitosamente.");
 }
 
 // Funcion para los botones de la parte del organizador
