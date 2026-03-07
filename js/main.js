@@ -1,19 +1,21 @@
-let datosIntercambio = {
+// Intentamos cargar datos previos del localStorage, si no hay, inicializamos la estructura vacía
+let datosIntercambio = cargarDeStorage() || {
     evento: { nombre: "Intercambio UAA 2026", tipo: "", fecha: "", presupuesto: 0 },
     organizador: { nombre: "", participa: false },
     participantes: [],
     resultados: []
 };
 
-// Esto les da los id's
-let ultimoIdAsignado = 0; 
+// Esto les da los id's (Buscamos el ID más alto guardado para no repetir, o empezamos en 0)
+let ultimoIdAsignado = datosIntercambio.participantes.reduce((max, p) => Math.max(max, parseInt(p.id) || 0), 0); 
 
 let htmlIzquierdaOriginal = "";
 let htmlDerechaOriginal = "";
 
-// Esta funcion es para lo del local storage si quieres lo puedes pasar al storage.js hermano y mandarlo a llamar aqui
+// Esta función se llama cada vez que modificamos algo (agregamos participante, exclusión, etc.)
 function sincronizarDatos() {
-    console.log("Datos actualizados:", datosIntercambio);
+    guardarEnStorage(datosIntercambio);
+    console.log("Datos guardados en localStorage exitosamente.");
 }
 
 // Funcion para los botones de la parte del organizador
@@ -109,21 +111,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mesaTrigger = document.getElementById('mesa-trigger');
     const modalLibreta = document.getElementById('modal-libreta');
+    const sobresTrigger = document.getElementById('sobres-trigger')
     const Libro = document.getElementById('el-libro');
     const triggerAbrir = document.getElementById('trigger-abrir');
+
+    // Lógica del estado de la mesa central
+    const sorteoCompletado = datosIntercambio.resultados && datosIntercambio.resultados.length > 0;
+
+    if (sorteoCompletado) {
+        sobresTrigger.classList.remove('hidden'); // Aparecen los sobres si hay un sorteo completado
+    }
+
+    // Click en los sobres
+    sobresTrigger.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que el clic traspase a la mesa, ya que los sobres estan arriba de ella
+        
+        console.log("¡Sobres clickeados! Abriendo resultados...");
+        // AQUÍ SE MOSTRARÁN LOS RESULTADOS
+    });
 
     // Guardamos el HTML inicial de las páginas
     htmlIzquierdaOriginal = document.getElementById('pagina-izquierda').innerHTML;
     htmlDerechaOriginal = document.getElementById('pagina-derecha').innerHTML;
 
+    // Clic en la mesa central
     mesaTrigger.addEventListener('click', () => {
-        modalLibreta.classList.remove('hidden');
-        modalLibreta.classList.add('flex');
-        Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
-        Libro.classList.remove('is-open');
-        Libro.style.transform = ""; 
-        document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
-        setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
+        // Volvemos a checar el estado por si el sorteo se acaba de hacer en esta sesión
+        if (datosIntercambio.resultados && datosIntercambio.resultados.length > 0) {
+            // AQUÍ SE ABRIRÁ LA PANTALLA DE RESULTADOS
+            console.log("Abriendo pantalla de resultados...");
+            if (typeof cargarPantallaSobres === 'function') {
+                cargarPantallaSobres();
+            }
+        } else {
+            // Si no hay sorteo, abrimos la libreta de registro normalmente
+            modalLibreta.classList.remove('hidden');
+            modalLibreta.classList.add('flex');
+            Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
+            Libro.classList.remove('is-open');
+            Libro.style.transform = ""; 
+            document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
+            setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
+        }
     });
 
     triggerAbrir.addEventListener('click', () => {
