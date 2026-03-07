@@ -12,13 +12,16 @@ function iniciarCeremoniaSorteo() {
     }
 
     // Ponemos el vaso
-    vasoExterno.classList.remove('hidden', 'right-[5%]', 'md:right-[15%]', 'top-1/2', '-translate-y-1/2');
+    vasoExterno.classList.remove('hidden');
     
+    const isMobile = window.innerWidth < 768;
+    const escalaVaso = isMobile ? "scale(1.2)" : "scale(1.8)";
+
     Object.assign(vasoExterno.style, {
         position: "fixed",
         left: "50%",
         top: "50%",
-        transform: "translate(-50%, -50%) scale(1.8)",
+        transform: `translate(-50%, -50%) ${escalaVaso}`,
         zIndex: "1000",
         opacity: "1",
         display: "flex",
@@ -53,7 +56,7 @@ function iniciarCeremoniaSorteo() {
                 document.getElementById('sobres-trigger').classList.remove('hidden');
                 dropzone.classList.remove('animate-shake-pixel');
                 mensaje.innerHTML = '¡ASIGNADOS! ✨';
-                mensaje.style.backgroundColor = "#4ade80"; // Verde éxito
+                mensaje.style.backgroundColor = "#4ade80"; 
                 
                 setTimeout(() => {
                     vasoExterno.style.opacity = "0";
@@ -61,7 +64,8 @@ function iniciarCeremoniaSorteo() {
                     
                     setTimeout(() => {
                         vasoExterno.style.cssText = ""; 
-                        vasoExterno.classList.add('hidden', 'right-[5%]', 'md:right-[15%]', 'top-1/2', '-translate-y-1/2');
+                        vasoExterno.classList.add('hidden'); 
+                        if (mensaje) mensaje.remove();
                         
                         modalLibreta.classList.add('hidden');
                         modalLibreta.classList.remove('flex');
@@ -95,7 +99,8 @@ function iniciarCeremoniaSorteo() {
                     vasoExterno.style.opacity = "0";
                     setTimeout(() => {
                         vasoExterno.style.cssText = "";
-                        vasoExterno.classList.add('hidden', 'right-[5%]', 'md:right-[15%]', 'top-1/2', '-translate-y-1/2');
+                        vasoExterno.classList.add('hidden'); 
+                        if (mensaje) mensaje.remove();
                         
                         if (Libro) {
                             Libro.style.opacity = "1";
@@ -166,7 +171,6 @@ function ejecutarAlgoritmoSorteo() {
 }
 
 // REVELACIÓN DE SOBRES Y RESUMEN DEL INTERCAMBIO
-
 function cargarPantallaSobres() {
     const ui = document.getElementById('ui-intercambio');
     const escenaCabana = document.getElementById('escena-cabana');
@@ -305,7 +309,6 @@ function revelarDestinatario(idDador, nombreDador) {
 }
 
 // RESUMEN DEL INTERCAMBIO QUE PIDE LA RÚBRICA
-
 function mostrarResumenCumpliendoRubrica() {
     const org = datosIntercambio.organizador;
     const ev = datosIntercambio.evento;
@@ -378,7 +381,17 @@ function confirmarBorrarSorteo() {
             datosIntercambio.resultados = []; // Vaciamos los resultados
             sincronizarDatos(); // Guardamos en el localStorage
             cerrarPantallaSobres();
+
+            const vasoExt = document.getElementById('vaso-externo');
+            if (vasoExt) {
+                vasoExt.style.cssText = ""; 
+                vasoExt.classList.add('hidden');
+            }
             
+            // MATAMOS AL FANTASMA AQUI TAMBIÉN
+            const msj = document.getElementById('mensaje-ritual');
+            if (msj) msj.remove();
+
             // Regresamos la imagen de la mesa a la normalidad
             document.getElementById('sobres-trigger').classList.add('hidden');
 
