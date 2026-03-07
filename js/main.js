@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
             Libro.classList.remove('is-open');
             Libro.style.transform = ""; 
+            document.getElementById('trigger-abrir').classList.remove('hidden');
             document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
             setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
         }
