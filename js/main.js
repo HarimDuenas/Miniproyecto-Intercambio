@@ -309,6 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
         pantallaInicio.style.transition = 'transform 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
         pantallaInicio.style.transform = 'scale(6)'; 
 
+        const logo = document.getElementById('logo-sistema');
+        if (logo) {
+            logo.style.transition = 'opacity 0.8s ease-out';
+            logo.style.opacity = '0';
+        }
+
         // SECUENCIA DE AUDIOS: Fade Out Exterior -> Silencio -> Fade In Interior
         let volExterior = audioExterior.volume;
 
