@@ -137,10 +137,76 @@ document.addEventListener('DOMContentLoaded', () => {
     audioExterior.volume = 0.3; // Volumen al 50% para que no asuste
     let audioIniciado = false;
 
-    // Audio para el interior de la cabaña
-    const audioInterior = new Audio("../assets/interior1.mp3");
-    audioInterior.loop = true;
-    audioInterior.volume = 0; // Para hacer fade-in
+    // Sistema de canciones del interior
+
+    // Definimos las 4 canciones
+    const listaCanciones = {
+        'poster1' : new Audio("assets/interior1.mp3"),
+        'poster2' : new Audio("assets/interior2.mp3"),
+        'poster3' : new Audio("assets/interior3.mp3"),
+        'poster4' : new Audio("assets/interior4.mp3")
+    }
+
+    // Configuramos loops y volumenes
+    Object.values(listaCanciones).forEach(audio => {
+        audio.loop = true;
+        audio.volume = 0; // Todos empiezan en silencio para el fade-in
+    });
+
+    // Pista que sonará por defecto
+    let cancionActualId = 'poster1';
+    let audioActual = listaCanciones[cancionActualId];
+    const volInteriorMax = 0.03; // Volúmen máximo global
+    let intervalCrossfade = null; // Temporizador global para los cambios de canción
+
+    // Función de cambio de música
+    function cambiarCancionConCrossfade(nuevoPosterId){
+        if (nuevoPosterId === cancionActualId) return; // Si ya está sonando, no hacemos nada
+
+        console.log(`Cambiando música de ${cancionActualId} a ${nuevoPosterId}...`);
+        const cancionNueva = listaCanciones[nuevoPosterId];
+        
+        // Limpiamos cualquier temporizador anterior por si el usuario hace clics rápidos
+        if (intervalCrossfade) clearInterval(intervalCrossfade);
+
+        // Preparamos la canción nueva
+        cancionNueva.volume = 0;
+        cancionNueva.play().catch(() => {});
+
+        let volAnterior = audioActual.volume;
+        let volNuevo = 0;
+
+        intervalCrossfade = setInterval(() => {
+            // Bajamos el volumen de la canción vieja
+            if (volAnterior > 0.05) {
+                volAnterior -= 0.05;
+                audioActual.volume = Math.max(0, volAnterior);
+            } else {
+                audioActual.pause(); // Apagamos la vieja cuando ya no se oye
+            }
+
+            // Subimos el volumen a la canción nueva
+            if (volNuevo < volInteriorMax) {
+                volNuevo += 0.03; // Sube un poco más lento para que sea sutil
+                cancionNueva.volume = Math.min(volInteriorMax, volNuevo);
+            }
+
+            // Detenemos cuando la vieja se apagó Y la nueva llegó al máximo
+            if (volAnterior <= 0.05 && volNuevo >= volInteriorMax) {
+                clearInterval(intervalCrossfade);
+                // Actualizamos las referencias globales
+                audioActual = cancionNueva;
+                cancionActualId = nuevoPosterId;
+                console.log("Cambio de canción completado.");
+            }
+        }, 150);
+    }
+
+    document.querySelectorAll('.poster-musical').forEach(poster => {
+        poster.addEventListener('click', () => {
+            cambiarCancionConCrossfade(poster.id); // Usamos el ID del poster ('poster1', 'poster2', 'poster3')
+        });
+    });
 
     // Audio para le ronroneo del gato
     const audioGato = new Audio('assets/ronroneo.mp3');
@@ -201,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // SECUENCIA DE AUDIOS: Fade Out Exterior -> Silencio -> Fade In Interior
         let volExterior = audioExterior.volume;
-        const volInteriorMax = 0.025; // Volumen final del interior
 
         // Temporizador para bajar el bosque
         const fadeOutExterior = setInterval(() => {
@@ -213,15 +278,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 audioExterior.pause();
                 clearInterval(fadeOutExterior);
 
-                // Ponemos play al interior en silencio y empezamos a subirlo
-                audioInterior.volume = 0;
-                audioInterior.play().catch(() => {});
+                // USAMOS SOLO audioActual
+                audioActual.volume = 0;
+                audioActual.play().catch(() => {});
                 
                 let volInterior = 0;
                 const fadeInInterior = setInterval(() => {
                     if (volInterior < volInteriorMax) {
                         volInterior += 0.02; // Sube gradualmente
-                        audioInterior.volume = Math.min(volInteriorMax, volInterior);
+                        // Reemplazamos audioInterior por audioActual
+                        audioActual.volume = Math.min(volInteriorMax, volInterior);
                     } else {
                         // Cuando llega a su volumen ideal, detenemos este temporizador
                         clearInterval(fadeInInterior);
