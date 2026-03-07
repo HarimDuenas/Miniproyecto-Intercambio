@@ -27,36 +27,41 @@
 
     <div id="fade-overlay" class="fixed inset-0 bg-black opacity-0 pointer-events-none z-[100] transition-opacity duration-1000"></div>
 
-    <main id="escena-cabana" class="hidden relative w-full max-w-[1920px] aspect-video z-10 transition-transform duration-1000 origin-bottom">
+    <div id="escena-cabana" class="hidden relative w-screen h-screen overflow-hidden flex items-center justify-center z-10 bg-[#120e0a]">
         
         <img src="assets/fondo-wide.png" class="absolute inset-0 w-full h-full object-cover z-0" alt="Fondo de Cabaña">
-        <img src="assets/fogata.png" class="fuego-vivo absolute top-[-10%] left-1/2 -translate-x-1/2 w-[40%] z-10" alt="Hoguera">
 
-        <div class="absolute top-[5%] right-[4%] w-[25%] h-[30%] z-5 flex justify-center items-center gap-4 pointer-events-auto">
-            <img src="assets/poster1.png" id="poster1" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 1">
-            <img src="assets/poster2.png" id="poster2" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 2">
-            <img src="assets/poster3.png" id="poster3" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 3">
-            <img src="assets/poster4.png" id="poster4" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 4">
-        </div>
-        
-        <img src="assets/sofa.png" class="absolute top-[18%] left-[-5%] w-[45%] z-20" alt="Sillón naranja">
-        <img src="assets/puff-derecha.png" class="absolute top-[30%] right-[6%] w-[34%] z-20" alt="Puff verde">        
-        <img src="assets/mesa-con-lampara.png" class="absolute top-[43%] right-[2%] w-[14%] z-30" alt="Mesita con lámpara">
+        <main class="relative w-full max-w-[1920px] aspect-video z-10">
+            
+            <img src="assets/fogata.png" class="fuego-vivo absolute top-[-10%] left-1/2 -translate-x-1/2 w-[40%] z-10" alt="Hoguera">
 
-        <div id="gato-interactivo" class="absolute bottom-[-10%] w-[35%] z-30 group cursor-pointer">
-            <img src="assets/puff-gato.png" class="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02] drop-shadow-lg" alt="Gato durmiendo">
-            <img src="assets/dialogoGato.png" class="absolute -top-[-10%] left-[50%] w-[50%] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:-translate-y-3 pointer-events-none drop-shadow-md z-40" alt="Diálogo del gato">
-        </div>
+            <div class="absolute top-[5%] right-[4%] w-[25%] h-[30%] z-5 flex justify-center items-center gap-4 pointer-events-auto">
+                <img src="assets/poster1.png" id="poster1" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 1">
+                <img src="assets/poster2.png" id="poster2" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 2">
+                <img src="assets/poster3.png" id="poster3" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 3">
+                <img src="assets/poster4.png" id="poster4" class="poster-musical group active:scale-95 transition-transform drop-shadow-[0_5px_5px_rgba(0,0,0,0.5)]" alt="Canción 4">
+            </div>
 
-        <img src="assets/madejas.png" class="absolute bottom-[20%] right-[15%] w-[12%] z-30" alt="Canasta de hilos">
+            <img src="assets/sofa.png" class="absolute top-[18%] left-[-5%] w-[45%] z-20" alt="Sillón naranja">
+            
+            <img src="assets/puff-derecha.png" class="absolute top-[30%] right-[6%] w-[34%] z-20" alt="Puff verde">
+            
+            <img src="assets/mesa-con-lampara.png" class="lampara-viva absolute top-[43%] right-[2%] w-[14%] z-30" alt="Mesita con lámpara">
 
-        
-        <div id="contenedor-mesa" class="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] z-40 group cursor-pointer transition-transform duration-300 drop-shadow-2xl hover:scale-105">
-            <img src="assets/mesa-central.png" id="mesa-trigger" class="w-fill h-auto object-contain" alt="Mesa con libreta">
-            <img src="assets/sobres.png" id="sobres-trigger" class="hidden absolute bottom-[65%] left-[52%] -translate-x-1/2 w-[35%] z-50 cursor-pointer hover:scale-110 hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" alt="Sobres de resultados">
-        </div>
+            <div id="gato-interactivo" class="absolute bottom-[-10%] w-[35%] z-30 group cursor-pointer">
+                <img src="assets/puff-gato.png" class="w-full h-auto transition-transform duration-300 group-hover:scale-[1.02] drop-shadow-lg" alt="Gato durmiendo">
+                <img src="assets/dialogoGato.png" class="absolute -top-[40%] left-[50%] w-[70%] opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:-translate-y-3 pointer-events-none drop-shadow-md z-40" alt="Diálogo del gato">
+            </div>
 
-    </main>
+            <img src="assets/madejas.png" class="absolute bottom-[20%] right-[15%] w-[12%] z-30" alt="Canasta de hilos">
+
+            <div id="contenedor-mesa" class="absolute bottom-[2%] left-1/2 -translate-x-1/2 w-[30%] z-40 group">
+                <img src="assets/mesa-central.png" id="mesa-trigger" class="w-fill h-auto object-contain transition-transform duration-300 drop-shadow-2xl hover:scale-105 cursor-pointer" alt="Mesa con libreta">
+                <img src="assets/sobres.png" id="sobres-trigger" class="hidden absolute bottom-[65%] left-[52%] -translate-x-1/2 w-[35%] z-50 cursor-pointer hover:scale-110 hover:-translate-y-2 transition-all duration-300 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" alt="Sobres de resultados">
+            </div>
+
+        </main>
+    </div>
 
     <section id="ui-intercambio" class="absolute inset-0 z-50 hidden opacity-0 transition-opacity duration-1000 flex items-center justify-center p-4">
     </section>
@@ -88,7 +93,7 @@
             </div>
         </div>
 
-        <div id="contenedor-libro" class="perspective-[2500px] w-full flex justify-center items-center relative z-10 scale-[0.75] sm:scale-100 md:scale-110 lg:scale-125 xl:scale-150 transition-all duration-500">
+        <div id="contenedor-libro" class="perspective-[2500px] w-full flex justify-center items-center relative z-10 scale-[0.45] sm:scale-[0.60] md:scale-[0.75] lg:scale-[0.90] xl:scale-100 transition-all duration-500 origin-center">
             <div id="el-libro" class="relative w-[320px] sm:w-[380px] h-[500px] ...">
                 
                 <div id="trigger-abrir" class="absolute inset-0 z-50"></div>
