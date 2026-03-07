@@ -23,6 +23,34 @@ function activarEventosOrganizador() {
     const btnSiguiente = document.getElementById('btn-siguiente');
     const btnCerrar = document.getElementById('btn-cerrar');
 
+    const btnReiniciarTodo = document.getElementById('btn-reiniciar-todo');
+
+    // Lógica para borrar absolutamente todo y reiniciar
+    if (btnReiniciarTodo) {
+        btnReiniciarTodo.addEventListener('click', (e) => {
+            Swal.fire({
+                title: '¿REINICIAR TODO EL EVENTO?',
+                text: 'Se borrarán el organizador, participantes, exclusiones y presupuesto. ¡Empezarás desde cero!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, borrar todo',
+                cancelButtonText: 'Cancelar',
+                background: '#f4ebd0',
+                customClass: {
+                    popup: 'border-4 border-black rounded-none shadow-[8px_8px_0_#000] font-mono',
+                    confirmButton: 'bg-red-500 text-white border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_#000] hover:translate-y-1 hover:shadow-none transition-all',
+                    cancelButtonText: 'bg-gray-400 text-black border-4 border-black font-bold uppercase px-4 py-2 shadow-[4px_4px_0_#000] ml-2 hover:translate-y-1 hover:shadow-none transition-all'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Borramos la llave principal del almacenamiento
+                    localStorage.removeItem("intercambio_uaa_2026");
+                }
+            });
+        });
+    }
+
     if (btnCerrar) {
         btnCerrar.addEventListener('click', () => {
             const Libro = document.getElementById('el-libro');
