@@ -231,3 +231,14 @@
     border-color: rgba(34, 211, 238, 0.5); /* cyan-400 de Tailwind al 50% */
     filter: brightness(1.1) drop-shadow(0 0 10px rgba(34, 211, 238, 0.7));
 }
+
+@keyframes respiracion-logo {
+    0%   { transform: translate(-50%, 0); }
+    50%  { transform: translate(-50%, -15px); } /* Sube 15px */
+    100% { transform: translate(-50%, 0); }
+}
+
+.logo-respirando {
+    /* Mantenemos el translate(-50%) para el centrado horizontal de Tailwind y agregamos la animación */
+    animation: respiracion-logo 6s infinite ease-in-out;
+}
