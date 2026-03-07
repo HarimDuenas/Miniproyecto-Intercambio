@@ -49,11 +49,38 @@ function cargarPaginaParticipantes(nombreOrganizador, organizadorParticipa) {
             crearPapelito(p.nombre, p.id);
             agregarLista(p.nombre, p.id);
         });
-    } else if (organizadorParticipa) {
-        ultimoIdAsignado++; 
-        const idOrg = ultimoIdAsignado.toString();
-        crearPapelito(nombreOrganizador, idOrg);
-        agregarLista(nombreOrganizador, idOrg);
+    } 
+
+    // Evaluamos al organizador de forma independiente para ver si participa
+    if (organizadorParticipa) {
+        // Revisamos si ya está en la lista para no duplicarlo xd
+        const yaEstaEnLista = datosIntercambio.participantes.some(p => p.nombre === nombreOrganizador);
+        
+        if (!yaEstaEnLista) {
+            ultimoIdAsignado++; 
+            const idOrg = ultimoIdAsignado.toString();
+            crearPapelito(nombreOrganizador, idOrg);
+            agregarLista(nombreOrganizador, idOrg);
+        }
+    } else {
+        // Si le quitó la palomita, buscamos si estaba en la lista y lo borramos
+        const orgIndex = datosIntercambio.participantes.findIndex(p => p.nombre === nombreOrganizador);
+        
+        if (orgIndex !== -1) {
+            const idOrgBorrar = datosIntercambio.participantes[orgIndex].id;
+            
+            // Lo quitamos del HTML (de la lista)
+            const liBorrar = Array.from(document.querySelectorAll('#lista-participantes li')).find(li => li.querySelector('span').textContent.includes(nombreOrganizador));
+            if (liBorrar) liBorrar.remove();
+            
+            // Lo quitamos del vaso
+            const papelBorrar = document.querySelector(`.papel-arrugado[data-id="${idOrgBorrar}"]`);
+            if (papelBorrar) papelBorrar.remove();
+            
+            // Lo quitamos del array
+            datosIntercambio.participantes = datosIntercambio.participantes.filter(p => p.id !== idOrgBorrar);
+            sincronizarDatos();
+        }
     }
 
     // Drag an drop del vaso
