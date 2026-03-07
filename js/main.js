@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lógica de audio exterior
     const audioExterior = new Audio('assets/ambientacionExterior.mp3');
     audioExterior.loop = true; // Que se repita infinitamente
-    audioExterior.volume = 0.5; // Volumen al 50% para que no asuste
+    audioExterior.volume = 0.3; // Volumen al 50% para que no asuste
     let audioIniciado = false;
 
     // Audio para el interior de la cabaña
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // SECUENCIA DE AUDIOS: Fade Out Exterior -> Silencio -> Fade In Interior
         let volExterior = audioExterior.volume;
-        const volInteriorMax = 0.3; // Volumen final del interior
+        const volInteriorMax = 0.025; // Volumen final del interior
 
         // Temporizador para bajar el bosque
         const fadeOutExterior = setInterval(() => {
