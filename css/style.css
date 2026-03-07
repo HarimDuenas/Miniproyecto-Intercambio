@@ -213,5 +213,21 @@
 }
 
 .fuego-vivo {
-    animation: parpadeo-fuego 2s infinite;
+    animation: parpadeo-fuego 3s infinite;
+}
+
+.poster-musical {
+    width: 28%; /* Ancho relativo dentro de su contenedor flex */
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Para evitar saltos al poner el borde en hover */
+}
+
+/* Efecto hover: se agranda un poco y brilla con un tono cian lo-fi */
+.poster-musical:hover {
+    transform: scale(1.1) translateY(-5px);
+    border-color: rgba(34, 211, 238, 0.5); /* cyan-400 de Tailwind al 50% */
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(34, 211, 238, 0.7));
 }
