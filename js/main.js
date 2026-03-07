@@ -126,8 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sobresTrigger.addEventListener('click', (e) => {
         e.stopPropagation(); // Evita que el clic traspase a la mesa, ya que los sobres estan arriba de ella
         
-        console.log("¡Sobres clickeados! Abriendo resultados...");
-        // AQUÍ SE MOSTRARÁN LOS RESULTADOS
+        cargarPantallaSobres();
     });
 
     // Guardamos el HTML inicial de las páginas
