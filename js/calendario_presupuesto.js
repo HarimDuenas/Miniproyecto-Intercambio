@@ -70,10 +70,47 @@ function cargarPaginaPresupuesto() {
         </div>
     `;
 
-    // Esto es por si selecciona le de una fecha ya puesta
-    const selectMotivo = document.getElementById('motivo-intercambio');
-    const btnFecha = document.getElementById('btn-seleccionar-fecha');
+    // Autocompletamos los datos del evento si ya existen
+    const ev = datosIntercambio.evento;
 
+    // Autocompletamos motivo
+    const selectMotivo = document.getElementById('motivo-intercambio');
+    if(ev.tipo) {
+        selectMotivo.value = ev.tipo;
+    }
+
+    // Autocompletamos fecha
+    const btnFecha = document.getElementById('btn-seleccionar-fecha');
+    if(ev.fecha) {
+        const partesFecha = ev.fecha.split('-'); // Separamos la fecha de su formato YYYY-MM-DD
+        if(partesFecha.length === 3) {
+            const mesesStr = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            btnFecha.textContent = `${partesFecha[2]} de ${mesesStr[parseInt(partesFecha[1])-1]} del ${partesFecha[0]} 📅`;
+            btnFecha.classList.add('bg-[#4ade80]');
+        }
+    }
+
+    // Autocompletamos presupuesto
+    if(ev.presupuesto > 0){
+        const btnPresup = Array.from(document.querySelectorAll('.btn-presup')).find(b => parseInt(b.dataset.valor) === ev.presupuesto);;
+
+        if(btnPresup && ev.presupuesto !== 0) {
+            // Es un botón predefinido ($100, $200, $500)
+            document.querySelectorAll('.btn-presup').forEach(b => { b.classList.remove('bg-[#4ade80]'); b.classList.add('bg-white'); });
+            btnPresup.classList.replace('bg-white', 'bg-[#4ade80]');
+        } else {
+            // Es un presupuesto personalizado ("Otro")
+            document.querySelectorAll('.btn-presup').forEach(b => { b.classList.remove('bg-[#4ade80]'); b.classList.add('bg-white'); });
+            const btnOtro = Array.from(document.querySelectorAll('.btn-presup')).find(b => b.dataset.valor === "0");
+            if (btnOtro) btnOtro.classList.replace('bg-white', 'bg-[#4ade80]');
+            
+            const inputP = document.getElementById('presupuesto-personalizado');
+            inputP.value = ev.presupuesto;
+            inputP.classList.remove('hidden');
+        }
+    }
+
+    // Esto es por si selecciona de una fecha ya puesta
     selectMotivo.addEventListener('change', (e) => {
         const motivo = e.target.value;
         let fechaAuto = "";
