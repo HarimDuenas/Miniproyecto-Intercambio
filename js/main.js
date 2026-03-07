@@ -67,6 +67,62 @@ function activarEventosOrganizador() {
 // DOM XD (Ethernal)
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Ambientacicón visual externa
+    function iniciarAmbientacionExterior() {
+        const contenedor = document.getElementById('pantalla-inicio');
+
+        // Generar Luciérnagas (máximo de 40)
+        for(let i = 0; i < 40; i++) {
+            const luciernaga = document.createElement('div');
+            luciernaga.className = 'absolute w-1 h-1 bg-[#facc15] rounded-full luciernaga z-30 pointer-events-none drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]';
+            
+            let posX, posY;
+            
+            // Distribuimos: 50% en el pasto (abajo), 50% en los laterales (más alto)
+            if (Math.random() > 0.5) {
+                // Zona del pasto (Todo a lo ancho, pero solo abajo)
+                posX = Math.random() * 100;
+                posY = Math.random() * 35;
+            } else {
+                // Zona de los laterales de la cabaña (Izquierda o Derecha, flotando más alto)
+                posX = Math.random() > 0.5 ? (Math.random() * 25) : (75 + Math.random() * 25);
+                posY = Math.random() * 85; // Pueden subir casi hasta arriba
+            }
+            
+            luciernaga.style.bottom = posY + 'vh'; 
+            luciernaga.style.left = posX + 'vw';
+            
+            luciernaga.style.animationDuration = (Math.random() * 4 + 4) + 's'; 
+            luciernaga.style.animationDelay = (Math.random() * 5) + 's';
+            
+            contenedor.appendChild(luciernaga);
+        }
+
+        // Generar Estrellas Fugaces
+        const dispararEstrella = setInterval(() => {
+            if (!parallaxActivo) {
+                clearInterval(dispararEstrella);
+                return;
+            }
+
+            const estrella = document.createElement('div');
+            estrella.className = 'absolute w-1 h-1 bg-white rounded-full estrella-animada z-0 pointer-events-none shadow-[0_0_10px_2px_rgba(255,255,255,0.8)]';
+            
+            estrella.style.top = (Math.random() * 30) + 'vh'; 
+            estrella.style.left = (Math.random() * 90 + 10) + 'vw'; 
+            
+            contenedor.appendChild(estrella);
+
+            setTimeout(() => {
+                estrella.remove();
+            }, 1200); 
+
+        }, 1200); // Cooldown de estrellas fugaces
+    }
+
+    // Llamamos a la función al cargar la página para iniciar ambientación
+    iniciarAmbientacionExterior();
+
     // Referencias del exterior de la cabaña y transición
     const pantallaInicio = document.getElementById('pantalla-inicio');
     const capasParallax = document.querySelectorAll('.capa-parallax');

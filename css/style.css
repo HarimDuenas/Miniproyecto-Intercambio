@@ -172,3 +172,32 @@
 .animate-shake-pixel {
     animation: shake-pixel 0.2s ease-in-out infinite;
 }
+
+/* Animación de la estrella cayendo en diagonal */
+@keyframes estrella-fugaz {
+    0% { 
+        transform: translate(0, 0) rotate(-45deg) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(-300px, 300px) rotate(-45deg) scale(0); 
+        opacity: 0; 
+    }
+}
+
+.estrella-animada {
+    animation: estrella-fugaz 1.2s ease-in forwards;
+}
+
+/* Animación de las luciérnagas flotando y parpadeando */
+@keyframes flotar-luciernaga {
+    0% { transform: translate(0, 0); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(15px, -25px); opacity: 0.4; }
+    80% { opacity: 0.8; }
+    100% { transform: translate(-10px, -10px); opacity: 0; }
+}
+
+.luciernaga {
+    animation: flotar-luciernaga infinite alternate ease-in-out;
+}
