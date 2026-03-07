@@ -61,7 +61,7 @@ function agregarLista(nombre, id) {
     const lista = document.getElementById('lista-participantes');
     if(!lista) return;
     const li = document.createElement('li');
-    li.className = "bg-white border-2 border-black p-2 shadow-[2px_2px_0_#000] flex justify-between items-center transition-all duration-300";
+    li.className = "bg-white border-2 border-black p-1.5 sm:p-2 shadow-[2px_2px_0_#000] flex justify-between items-center transition-all duration-300";
     li.innerHTML = `<span class="truncate">✓ ${nombre}</span><button class="btn-eliminar text-red-600 font-extrabold px-2 border-2 border-red-600 rounded-sm">X</button>`;
     
     datosIntercambio.participantes.push({ id: id, nombre: nombre, exclusiones: [] });
