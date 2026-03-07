@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
     audioExterior.volume = 0.5; // Volumen al 50% para que no asuste
     let audioIniciado = false;
 
+    // Audio para el interior de la cabaña
+    const audioInterior = new Audio("../assets/interior1.mp3");
+    audioInterior.loop = true;
+    audioInterior.volume = 0; // Para hacer fade-in
+
     // Función para intentar iniciar el audio con la primera interacción
     const iniciarAudio = () => {
         if (!audioIniciado) {
@@ -98,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Escuchamos el primer clic o movimiento del mouse para brincarnos el bloqueo del navegador
     document.addEventListener('click', iniciarAudio);
     document.addEventListener('mousemove', iniciarAudio);
-    // --------------------------------
 
     // Efecto Parallax
     pantallaInicio.addEventListener('mousemove', (e) => {
@@ -113,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Transición de entrada
-    // Transición de entrada
     btnCabana.addEventListener('click', () => {
         parallaxActivo = false;
         pantallaInicio.style.pointerEvents = 'none';
@@ -121,18 +124,38 @@ document.addEventListener('DOMContentLoaded', () => {
         pantallaInicio.style.transition = 'transform 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
         pantallaInicio.style.transform = 'scale(6)'; 
 
-        // FADE OUT DEL AUDIO EXTERIOR
-        let volumenActual = audioExterior.volume;
-        const fadeOut = setInterval(() => {
-            if (volumenActual > 0.05) {
-                volumenActual -= 0.05;
-                audioExterior.volume = Math.max(0, volumenActual); // Evita valores negativos
-            } else {
-                audioExterior.pause(); // Lo pausamos por completo
-                clearInterval(fadeOut); // Detenemos el temporizador
-            }
-        }, 150); // Le baja el volumen cada 150 milisegundos
+        // SECUENCIA DE AUDIOS: Fade Out Exterior -> Silencio -> Fade In Interior
+        let volExterior = audioExterior.volume;
+        const volInteriorMax = 0.3; // Volumen final del interior
 
+        // Temporizador para bajar el bosque
+        const fadeOutExterior = setInterval(() => {
+            if (volExterior > 0.05) {
+                volExterior -= 0.05;
+                audioExterior.volume = Math.max(0, volExterior);
+            } else {
+                // Cuando el bosque se apaga, detenemos este temporizador
+                audioExterior.pause();
+                clearInterval(fadeOutExterior);
+
+                // Ponemos play al interior en silencio y empezamos a subirlo
+                audioInterior.volume = 0;
+                audioInterior.play().catch(() => {});
+                
+                let volInterior = 0;
+                const fadeInInterior = setInterval(() => {
+                    if (volInterior < volInteriorMax) {
+                        volInterior += 0.02; // Sube gradualmente
+                        audioInterior.volume = Math.min(volInteriorMax, volInterior);
+                    } else {
+                        // Cuando llega a su volumen ideal, detenemos este temporizador
+                        clearInterval(fadeInInterior);
+                    }
+                }, 150); // Velocidad del fade in
+            }
+        }, 150); // Velocidad del fade out
+
+        // Animaciones visuales
         setTimeout(() => {
             fadeOverlay.classList.remove('opacity-0');
             fadeOverlay.classList.add('opacity-100');
@@ -144,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             void escenaCabana.offsetWidth; 
             fadeOverlay.classList.remove('opacity-100');
             fadeOverlay.classList.add('opacity-0');
-        }, 1800); 
+        }, 1800);
     });
 
     const mesaTrigger = document.getElementById('mesa-trigger');
