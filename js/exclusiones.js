@@ -39,9 +39,9 @@ function cargarPaginaExclusiones() {
                         ${datosIntercambio.participantes
                             .filter(p => p.id !== idActivo && !pActivo.exclusiones.includes(p.id))
                             .map(p => `
-                                <div class="papel-excluir bg-white border-2 border-black p-2 cursor-grab shadow-[2px_2px_0_#000] hover:bg-gray-200 font-bold text-[10px] uppercase truncate" 
-                                     draggable="true" 
-                                     data-id="${p.id}">
+                                <div class="papel-excluir shrink-0 bg-white border-2 border-black p-2 cursor-grab shadow-[2px_2px_0_#000] hover:bg-gray-200 font-bold text-[10px] uppercase truncate" 
+                                    draggable="true" 
+                                    data-id="${p.id}">
                                     📄 ${p.nombre}
                                 </div>
                             `).join('')}
