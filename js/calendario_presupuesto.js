@@ -38,6 +38,7 @@ function cargarPaginaPresupuesto() {
                     <option value="Año Nuevo">🎇 Año Nuevo</option>
                     <option value="Otro">✨ Otro</option>
                 </select>
+                <input type="text" id="motivo-personalizado" class="hidden w-full mt-3 bg-white border-4 border-black p-2 text-sm focus:outline-none focus:bg-[#ffffe0] transition-colors font-mono" placeholder="Ej. Día del Programador">
             </div>
             <div class="bg-white/60 p-4 border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,1)] flex flex-col items-center">
                 <label class="block font-bold uppercase text-[11px] mb-4">Fecha</label>
@@ -75,8 +76,18 @@ function cargarPaginaPresupuesto() {
 
     // Autocompletamos motivo
     const selectMotivo = document.getElementById('motivo-intercambio');
+    const inputMotivoPersonalizado = document.getElementById('motivo-personalizado');
+    
     if(ev.tipo) {
-        selectMotivo.value = ev.tipo;
+        const opcionesBase = ["Navidad", "San Valentín", "Año Nuevo"];
+        if (opcionesBase.includes(ev.tipo)) {
+            selectMotivo.value = ev.tipo;
+        } else {
+            // Si el texto guardado no es de las opciones base, seleccionamos "Otro" y lo ponemos en el input
+            selectMotivo.value = "Otro";
+            inputMotivoPersonalizado.value = ev.tipo;
+            inputMotivoPersonalizado.classList.remove('hidden');
+        }
     }
 
     // Autocompletamos fecha
@@ -92,7 +103,7 @@ function cargarPaginaPresupuesto() {
 
     // Autocompletamos presupuesto
     if(ev.presupuesto > 0){
-        const btnPresup = Array.from(document.querySelectorAll('.btn-presup')).find(b => parseInt(b.dataset.valor) === ev.presupuesto);;
+        const btnPresup = Array.from(document.querySelectorAll('.btn-presup')).find(b => parseInt(b.dataset.valor) === ev.presupuesto);
 
         if(btnPresup && ev.presupuesto !== 0) {
             // Es un botón predefinido ($100, $200, $500)
@@ -110,7 +121,7 @@ function cargarPaginaPresupuesto() {
         }
     }
 
-    // Esto es por si selecciona de una fecha ya puesta
+    // Esto es por si selecciona de una fecha ya puesta o cambia el motivo
     selectMotivo.addEventListener('change', (e) => {
         const motivo = e.target.value;
         let fechaAuto = "";
@@ -119,24 +130,35 @@ function cargarPaginaPresupuesto() {
         if (motivo === "Navidad") {
             fechaAuto = "2026-12-25";
             textoBoton = "25 de Diciembre del 2026 🎄";
+            inputMotivoPersonalizado.classList.add('hidden');
         } else if (motivo === "San Valentín") {
             fechaAuto = "2026-02-14";
             textoBoton = "14 de Febrero del 2026 ❤️";
+            inputMotivoPersonalizado.classList.add('hidden');
         } else if (motivo === "Año Nuevo") {
             fechaAuto = "2027-01-01";
-            textoBoton = "1 de Enero del 2026 🎇";
+            textoBoton = "1 de Enero del 2027 🎇";
+            inputMotivoPersonalizado.classList.add('hidden');
+        } else if (motivo === "Otro") {
+            inputMotivoPersonalizado.classList.remove('hidden');
+            inputMotivoPersonalizado.focus();
+            // No cambiamos la fecha automática si es "Otro"
+        } else {
+            // Opción vacía ("Selecciona...")
+            inputMotivoPersonalizado.classList.add('hidden');
         }
 
         if (fechaAuto !== "") {
             datosIntercambio.evento.fecha = fechaAuto;
             btnFecha.textContent = textoBoton;
             btnFecha.classList.add('bg-[#4ade80]'); // Fondo verde éxito
-        } else {
+            datosIntercambio.evento.tipo = motivo;
+        } else if (motivo !== "Otro") {
+            // Si es vacío
             btnFecha.textContent = "SELECCIONAR FECHA 📅";
             btnFecha.classList.remove('bg-[#4ade80]');
+            datosIntercambio.evento.tipo = motivo;
         }
-        
-        datosIntercambio.evento.tipo = motivo;
         sincronizarDatos();
     });
 
@@ -174,11 +196,20 @@ function cargarPaginaPresupuesto() {
         renderizarCalendario();
     });
 
-    // Siguiente pantalla
+    // Siguiente pantalla (Guardado de los datos)
     document.getElementById('btn-siguiente-exclusiones').addEventListener('click', () => {
-        datosIntercambio.evento.tipo = selectMotivo.value;
+        
+        // Guardamos el tipo de evento personalizado o el del select
+        if (selectMotivo.value === 'Otro' && inputMotivoPersonalizado.value.trim() !== '') {
+            datosIntercambio.evento.tipo = inputMotivoPersonalizado.value.trim();
+        } else {
+            datosIntercambio.evento.tipo = selectMotivo.value;
+        }
+
+        // Guardamos presupuesto
         const inputP = document.getElementById('presupuesto-personalizado');
         if (!inputP.classList.contains('hidden')) datosIntercambio.evento.presupuesto = parseInt(inputP.value) || 0;
+        
         sincronizarDatos();
         cargarPaginaExclusiones();
     });
@@ -210,20 +241,29 @@ function renderizarCalendario() {
             
             // Verificamos qué fecha eligió el usuario para cambiar el motivo
             const selectMotivo = document.getElementById('motivo-intercambio');
+            const inputMotivoPersonalizado = document.getElementById('motivo-personalizado');
             const mesElegido = fechaActual.getMonth() + 1;
             
             if (mesElegido === 12 && i === 25) {
                 selectMotivo.value = "Navidad";
                 datosIntercambio.evento.tipo = "Navidad";
+                inputMotivoPersonalizado.classList.add('hidden');
             } else if (mesElegido === 2 && i === 14) {
                 selectMotivo.value = "San Valentín";
                 datosIntercambio.evento.tipo = "San Valentín";
+                inputMotivoPersonalizado.classList.add('hidden');
             } else if (mesElegido === 1 && i === 1) {
                 selectMotivo.value = "Año Nuevo";
                 datosIntercambio.evento.tipo = "Año Nuevo";
+                inputMotivoPersonalizado.classList.add('hidden');
             } else {
-                selectMotivo.value = "Otro";
-                datosIntercambio.evento.tipo = "Otro";
+                // Si el motivo anterior no era personalizado, lo pasamos a "Otro"
+                const opcionesBase = ["Navidad", "San Valentín", "Año Nuevo", ""];
+                if (opcionesBase.includes(selectMotivo.value)) {
+                    selectMotivo.value = "Otro";
+                    datosIntercambio.evento.tipo = "Otro";
+                    inputMotivoPersonalizado.classList.remove('hidden');
+                }
             }
             
             // Guardamos los cambios en LocalStorage
