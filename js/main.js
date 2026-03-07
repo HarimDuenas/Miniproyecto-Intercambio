@@ -111,6 +111,62 @@ function activarEventosOrganizador() {
 // DOM XD (Ethernal)
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Ambientacicón visual externa
+    function iniciarAmbientacionExterior() {
+        const contenedor = document.getElementById('pantalla-inicio');
+
+        // Generar Luciérnagas (máximo de 40)
+        for(let i = 0; i < 40; i++) {
+            const luciernaga = document.createElement('div');
+            luciernaga.className = 'absolute w-1 h-1 bg-[#facc15] rounded-full luciernaga z-30 pointer-events-none drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]';
+            
+            let posX, posY;
+            
+            // Distribuimos: 50% en el pasto (abajo), 50% en los laterales (más alto)
+            if (Math.random() > 0.5) {
+                // Zona del pasto (Todo a lo ancho, pero solo abajo)
+                posX = Math.random() * 100;
+                posY = Math.random() * 35;
+            } else {
+                // Zona de los laterales de la cabaña (Izquierda o Derecha, flotando más alto)
+                posX = Math.random() > 0.5 ? (Math.random() * 25) : (75 + Math.random() * 25);
+                posY = Math.random() * 85; // Pueden subir casi hasta arriba
+            }
+            
+            luciernaga.style.bottom = posY + 'vh'; 
+            luciernaga.style.left = posX + 'vw';
+            
+            luciernaga.style.animationDuration = (Math.random() * 4 + 4) + 's'; 
+            luciernaga.style.animationDelay = (Math.random() * 5) + 's';
+            
+            contenedor.appendChild(luciernaga);
+        }
+
+        // Generar Estrellas Fugaces
+        const dispararEstrella = setInterval(() => {
+            if (!parallaxActivo) {
+                clearInterval(dispararEstrella);
+                return;
+            }
+
+            const estrella = document.createElement('div');
+            estrella.className = 'absolute w-1 h-1 bg-white rounded-full estrella-animada z-0 pointer-events-none shadow-[0_0_10px_2px_rgba(255,255,255,0.8)]';
+            
+            estrella.style.top = (Math.random() * 30) + 'vh'; 
+            estrella.style.left = (Math.random() * 90 + 10) + 'vw'; 
+            
+            contenedor.appendChild(estrella);
+
+            setTimeout(() => {
+                estrella.remove();
+            }, 1200); 
+
+        }, 1200); // Cooldown de estrellas fugaces
+    }
+
+    // Llamamos a la función al cargar la página para iniciar ambientación
+    iniciarAmbientacionExterior();
+
     // Referencias del exterior de la cabaña y transición
     const pantallaInicio = document.getElementById('pantalla-inicio');
     const capasParallax = document.querySelectorAll('.capa-parallax');
@@ -118,6 +174,120 @@ document.addEventListener('DOMContentLoaded', () => {
     const fadeOverlay = document.getElementById('fade-overlay');
     const escenaCabana = document.getElementById('escena-cabana');
     let parallaxActivo = true;
+
+    // Lógica de audio exterior
+    const audioExterior = new Audio('assets/ambientacionExterior.mp3');
+    audioExterior.loop = true; // Que se repita infinitamente
+    audioExterior.volume = 0.3; // Volumen al 50% para que no asuste
+    let audioIniciado = false;
+
+    // Sistema de canciones del interior
+
+    // Definimos las 4 canciones
+    const listaCanciones = {
+        'poster1' : new Audio("assets/interior1.mp3"),
+        'poster2' : new Audio("assets/interior2.mp3"),
+        'poster3' : new Audio("assets/interior3.mp3"),
+        'poster4' : new Audio("assets/interior4.mp3")
+    }
+
+    // Configuramos loops y volumenes
+    Object.values(listaCanciones).forEach(audio => {
+        audio.loop = true;
+        audio.volume = 0; // Todos empiezan en silencio para el fade-in
+    });
+
+    // Pista que sonará por defecto
+    let cancionActualId = 'poster1';
+    let audioActual = listaCanciones[cancionActualId];
+    const volInteriorMax = 0.03; // Volúmen máximo global
+    let intervalCrossfade = null; // Temporizador global para los cambios de canción
+
+    // Función de cambio de música
+    function cambiarCancionConCrossfade(nuevoPosterId){
+        if (nuevoPosterId === cancionActualId) return; // Si ya está sonando, no hacemos nada
+
+        console.log(`Cambiando música de ${cancionActualId} a ${nuevoPosterId}...`);
+        const cancionNueva = listaCanciones[nuevoPosterId];
+        
+        // Limpiamos cualquier temporizador anterior por si el usuario hace clics rápidos
+        if (intervalCrossfade) clearInterval(intervalCrossfade);
+
+        // Preparamos la canción nueva
+        cancionNueva.volume = 0;
+        cancionNueva.play().catch(() => {});
+
+        let volAnterior = audioActual.volume;
+        let volNuevo = 0;
+
+        intervalCrossfade = setInterval(() => {
+            // Bajamos el volumen de la canción vieja
+            if (volAnterior > 0.05) {
+                volAnterior -= 0.05;
+                audioActual.volume = Math.max(0, volAnterior);
+            } else {
+                audioActual.pause(); // Apagamos la vieja cuando ya no se oye
+            }
+
+            // Subimos el volumen a la canción nueva
+            if (volNuevo < volInteriorMax) {
+                volNuevo += 0.03; // Sube un poco más lento para que sea sutil
+                cancionNueva.volume = Math.min(volInteriorMax, volNuevo);
+            }
+
+            // Detenemos cuando la vieja se apagó Y la nueva llegó al máximo
+            if (volAnterior <= 0.05 && volNuevo >= volInteriorMax) {
+                clearInterval(intervalCrossfade);
+                // Actualizamos las referencias globales
+                audioActual = cancionNueva;
+                cancionActualId = nuevoPosterId;
+                console.log("Cambio de canción completado.");
+            }
+        }, 150);
+    }
+
+    document.querySelectorAll('.poster-musical').forEach(poster => {
+        poster.addEventListener('click', () => {
+            cambiarCancionConCrossfade(poster.id); // Usamos el ID del poster ('poster1', 'poster2', 'poster3')
+        });
+    });
+
+    // Audio para le ronroneo del gato
+    const audioGato = new Audio('assets/ronroneo.mp3');
+    audioGato.loop = true;
+    audioGato.volume = 0.05; // Ajusta el volumen a tu gusto
+
+    const gatoInteractivo = document.getElementById('gato-interactivo');
+    
+    // Reproducir ronroneo cuando el mouse entra al área del gato
+    if (gatoInteractivo) {
+        gatoInteractivo.addEventListener('mouseenter', () => {
+            audioGato.play().catch(() => {}); // El catch evita errores en consola si hay bloqueos del navegador
+        });
+
+        // Pausar ronroneo cuando el mouse sale
+        gatoInteractivo.addEventListener('mouseleave', () => {
+            audioGato.pause();
+        });
+    }
+
+    // Función para intentar iniciar el audio con la primera interacción
+    const iniciarAudio = () => {
+        if (!audioIniciado) {
+            audioExterior.play().then(() => {
+                audioIniciado = true;
+                // Si ya inició, quitamos los eventos para no sobrecargar
+                document.removeEventListener('click', iniciarAudio);
+                document.removeEventListener('mousemove', iniciarAudio);
+            }).catch(() => {
+                // El navegador bloqueó el autoplay, esperamos al siguiente intento
+            });
+        }
+    };
+
+    // Escuchamos el primer clic o movimiento del mouse para brincarnos el bloqueo del navegador
+    document.addEventListener('click', iniciarAudio);
+    document.addEventListener('mousemove', iniciarAudio);
 
     // Efecto Parallax
     pantallaInicio.addEventListener('mousemove', (e) => {
@@ -139,6 +309,38 @@ document.addEventListener('DOMContentLoaded', () => {
         pantallaInicio.style.transition = 'transform 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
         pantallaInicio.style.transform = 'scale(6)'; 
 
+        // SECUENCIA DE AUDIOS: Fade Out Exterior -> Silencio -> Fade In Interior
+        let volExterior = audioExterior.volume;
+
+        // Temporizador para bajar el bosque
+        const fadeOutExterior = setInterval(() => {
+            if (volExterior > 0.05) {
+                volExterior -= 0.05;
+                audioExterior.volume = Math.max(0, volExterior);
+            } else {
+                // Cuando el bosque se apaga, detenemos este temporizador
+                audioExterior.pause();
+                clearInterval(fadeOutExterior);
+
+                // USAMOS SOLO audioActual
+                audioActual.volume = 0;
+                audioActual.play().catch(() => {});
+                
+                let volInterior = 0;
+                const fadeInInterior = setInterval(() => {
+                    if (volInterior < volInteriorMax) {
+                        volInterior += 0.02; // Sube gradualmente
+                        // Reemplazamos audioInterior por audioActual
+                        audioActual.volume = Math.min(volInteriorMax, volInterior);
+                    } else {
+                        // Cuando llega a su volumen ideal, detenemos este temporizador
+                        clearInterval(fadeInInterior);
+                    }
+                }, 150); // Velocidad del fade in
+            }
+        }, 150); // Velocidad del fade out
+
+        // Animaciones visuales
         setTimeout(() => {
             fadeOverlay.classList.remove('opacity-0');
             fadeOverlay.classList.add('opacity-100');
@@ -151,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
             void escenaCabana.offsetWidth; 
             fadeOverlay.classList.remove('opacity-100');
             fadeOverlay.classList.add('opacity-0');
-        }, 1800); 
+        }, 1800);
     });
 
     const mesaTrigger = document.getElementById('mesa-trigger');

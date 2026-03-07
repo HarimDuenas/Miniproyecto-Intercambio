@@ -172,3 +172,62 @@
 .animate-shake-pixel {
     animation: shake-pixel 0.2s ease-in-out infinite;
 }
+
+/* Animación de la estrella cayendo en diagonal */
+@keyframes estrella-fugaz {
+    0% { 
+        transform: translate(0, 0) rotate(-45deg) scale(1); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: translate(-300px, 300px) rotate(-45deg) scale(0); 
+        opacity: 0; 
+    }
+}
+
+.estrella-animada {
+    animation: estrella-fugaz 1.2s ease-in forwards;
+}
+
+/* Animación de las luciérnagas flotando y parpadeando */
+@keyframes flotar-luciernaga {
+    0% { transform: translate(0, 0); opacity: 0; }
+    20% { opacity: 1; }
+    50% { transform: translate(15px, -25px); opacity: 0.4; }
+    80% { opacity: 0.8; }
+    100% { transform: translate(-10px, -10px); opacity: 0; }
+}
+
+.luciernaga {
+    animation: flotar-luciernaga infinite alternate ease-in-out;
+}
+
+/* Animación para la fogata */
+@keyframes parpadeo-fuego {
+    0%   { filter: brightness(1) drop-shadow(0 -10px 20px rgba(255, 100, 0, 0.3));}
+    20%  { filter: brightness(1.1) drop-shadow(0 -15px 30px rgba(255, 120, 0, 0.5)) }
+    40%  { filter: brightness(0.95) drop-shadow(0 -5px 15px rgba(255, 90, 0, 0.2)); }
+    60%  { filter: brightness(1.15) drop-shadow(0 -20px 35px rgba(255, 130, 0, 0.6)) }
+    80%  { filter: brightness(1.05) drop-shadow(0 -10px 25px rgba(255, 110, 0, 0.4)) }
+    100% { filter: brightness(1) drop-shadow(0 -10px 20px rgba(255, 100, 0, 0.3)) }
+}
+
+.fuego-vivo {
+    animation: parpadeo-fuego 3s infinite;
+}
+
+.poster-musical {
+    width: 28%; /* Ancho relativo dentro de su contenedor flex */
+    height: auto;
+    object-fit: contain;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent; /* Para evitar saltos al poner el borde en hover */
+}
+
+/* Efecto hover: se agranda un poco y brilla con un tono cian lo-fi */
+.poster-musical:hover {
+    transform: scale(1.1) translateY(-5px);
+    border-color: rgba(34, 211, 238, 0.5); /* cyan-400 de Tailwind al 50% */
+    filter: brightness(1.1) drop-shadow(0 0 10px rgba(34, 211, 238, 0.7));
+}
