@@ -142,6 +142,25 @@ document.addEventListener('DOMContentLoaded', () => {
     audioInterior.loop = true;
     audioInterior.volume = 0; // Para hacer fade-in
 
+    // Audio para le ronroneo del gato
+    const audioGato = new Audio('assets/ronroneo.mp3');
+    audioGato.loop = true;
+    audioGato.volume = 0.05; // Ajusta el volumen a tu gusto
+
+    const gatoInteractivo = document.getElementById('gato-interactivo');
+    
+    // Reproducir ronroneo cuando el mouse entra al área del gato
+    if (gatoInteractivo) {
+        gatoInteractivo.addEventListener('mouseenter', () => {
+            audioGato.play().catch(() => {}); // El catch evita errores en consola si hay bloqueos del navegador
+        });
+
+        // Pausar ronroneo cuando el mouse sale
+        gatoInteractivo.addEventListener('mouseleave', () => {
+            audioGato.pause();
+        });
+    }
+
     // Función para intentar iniciar el audio con la primera interacción
     const iniciarAudio = () => {
         if (!audioIniciado) {
