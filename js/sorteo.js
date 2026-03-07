@@ -50,6 +50,7 @@ function iniciarCeremoniaSorteo() {
             const exito = ejecutarAlgoritmoSorteo();
 
             if (exito) {
+                document.getElementById('sobres-trigger').classList.remove('hidden');
                 dropzone.classList.remove('animate-shake-pixel');
                 mensaje.innerHTML = '¡ASIGNADOS! ✨';
                 mensaje.style.backgroundColor = "#4ade80"; // Verde éxito

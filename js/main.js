@@ -111,21 +111,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mesaTrigger = document.getElementById('mesa-trigger');
     const modalLibreta = document.getElementById('modal-libreta');
+    const sobresTrigger = document.getElementById('sobres-trigger')
     const Libro = document.getElementById('el-libro');
     const triggerAbrir = document.getElementById('trigger-abrir');
+
+    // Lógica del estado de la mesa central
+    const sorteoCompletado = datosIntercambio.resultados && datosIntercambio.resultados.length > 0;
+
+    if (sorteoCompletado) {
+        sobresTrigger.classList.remove('hidden'); // Aparecen los sobres si hay un sorteo completado
+    }
+
+    // Click en los sobres
+    sobresTrigger.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que el clic traspase a la mesa, ya que los sobres estan arriba de ella
+        
+        console.log("¡Sobres clickeados! Abriendo resultados...");
+        // AQUÍ SE MOSTRARÁN LOS RESULTADOS
+    });
 
     // Guardamos el HTML inicial de las páginas
     htmlIzquierdaOriginal = document.getElementById('pagina-izquierda').innerHTML;
     htmlDerechaOriginal = document.getElementById('pagina-derecha').innerHTML;
 
+    // Clic en la mesa central
     mesaTrigger.addEventListener('click', () => {
-        modalLibreta.classList.remove('hidden');
-        modalLibreta.classList.add('flex');
-        Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
-        Libro.classList.remove('is-open');
-        Libro.style.transform = ""; 
-        document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
-        setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
+        // Volvemos a checar el estado por si el sorteo se acaba de hacer en esta sesión
+        if (datosIntercambio.resultados && datosIntercambio.resultados.length > 0) {
+            // AQUÍ SE ABRIRÁ LA PANTALLA DE RESULTADOS
+            console.log("Abriendo pantalla de resultados...");
+            if (typeof cargarPantallaSobres === 'function') {
+                cargarPantallaSobres();
+            }
+        } else {
+            // Si no hay sorteo, abrimos la libreta de registro normalmente
+            modalLibreta.classList.remove('hidden');
+            modalLibreta.classList.add('flex');
+            Libro.classList.add('animate-jump-pixel', 'cursor-pointer');
+            Libro.classList.remove('is-open');
+            Libro.style.transform = ""; 
+            document.getElementById('vaso-externo').classList.add('hidden', 'opacity-0');
+            setTimeout(() => modalLibreta.classList.remove('opacity-0'), 50);
+        }
     });
 
     triggerAbrir.addEventListener('click', () => {
