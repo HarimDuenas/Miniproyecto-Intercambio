@@ -201,3 +201,17 @@
 .luciernaga {
     animation: flotar-luciernaga infinite alternate ease-in-out;
 }
+
+/* Animación para la fogata */
+@keyframes parpadeo-fuego {
+    0%   { filter: brightness(1) drop-shadow(0 -10px 20px rgba(255, 100, 0, 0.3));}
+    20%  { filter: brightness(1.1) drop-shadow(0 -15px 30px rgba(255, 120, 0, 0.5)) }
+    40%  { filter: brightness(0.95) drop-shadow(0 -5px 15px rgba(255, 90, 0, 0.2)); }
+    60%  { filter: brightness(1.15) drop-shadow(0 -20px 35px rgba(255, 130, 0, 0.6)) }
+    80%  { filter: brightness(1.05) drop-shadow(0 -10px 25px rgba(255, 110, 0, 0.4)) }
+    100% { filter: brightness(1) drop-shadow(0 -10px 20px rgba(255, 100, 0, 0.3)) }
+}
+
+.fuego-vivo {
+    animation: parpadeo-fuego 2s infinite;
+}
