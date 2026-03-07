@@ -64,6 +64,49 @@ function activarEventosOrganizador() {
 
 // DOM XD (Ethernal)
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Referencias del exterior de la cabaña y transición
+    const pantallaInicio = document.getElementById('pantalla-inicio');
+    const capasParallax = document.querySelectorAll('.capa-parallax');
+    const btnCabana = document.getElementById('btn-cabana');
+    const fadeOverlay = document.getElementById('fade-overlay');
+    const escenaCabana = document.getElementById('escena-cabana');
+    let parallaxActivo = true;
+
+    // Efecto Parallax
+    pantallaInicio.addEventListener('mousemove', (e) => {
+        if (!parallaxActivo) return; 
+        const x = window.innerWidth / 2 - e.pageX;
+        const y = window.innerHeight / 2 - e.pageY;
+
+        capasParallax.forEach(capa => {
+            const speed = parseFloat(capa.getAttribute('data-speed'));
+            capa.style.transform = `translate3d(${x * speed}px, ${y * speed}px, 0)`;
+        });
+    });
+
+    // Transición de entrada
+    btnCabana.addEventListener('click', () => {
+        parallaxActivo = false;
+        pantallaInicio.style.pointerEvents = 'none';
+        pantallaInicio.style.transformOrigin = '46% 73%';
+        pantallaInicio.style.transition = 'transform 1.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        pantallaInicio.style.transform = 'scale(6)'; 
+
+        setTimeout(() => {
+            fadeOverlay.classList.remove('opacity-0');
+            fadeOverlay.classList.add('opacity-100');
+        }, 350);
+
+        setTimeout(() => {
+            pantallaInicio.classList.add('hidden');
+            escenaCabana.classList.remove('hidden'); 
+            void escenaCabana.offsetWidth; 
+            fadeOverlay.classList.remove('opacity-100');
+            fadeOverlay.classList.add('opacity-0');
+        }, 1800); 
+    });
+
     const mesaTrigger = document.getElementById('mesa-trigger');
     const modalLibreta = document.getElementById('modal-libreta');
     const Libro = document.getElementById('el-libro');
