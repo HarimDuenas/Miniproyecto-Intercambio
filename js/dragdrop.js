@@ -29,7 +29,11 @@ function dragandDropVaso() {
 
     papelDraggable.addEventListener('dragend', () => papelDraggable.classList.remove('opacity-50'));
     
-    vasoDropzone.addEventListener('dragover', (e) => { e.preventDefault(); vasoDropzone.classList.add('vaso-dragover'); });
+    vasoDropzone.addEventListener('dragover', (e) => { 
+        e.preventDefault(); 
+        vasoDropzone.classList.add('vaso-dragover'); 
+    });
+    
     vasoDropzone.addEventListener('dragleave', () => vasoDropzone.classList.remove('vaso-dragover'));
     
     vasoDropzone.addEventListener('drop', (e) => {
