@@ -140,9 +140,13 @@ function cargarPaginaExclusiones() {
             dropzone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropzone.classList.remove('bg-red-200');
+                // Obtenemos el Id del que soltaron
                 const idDrop = e.dataTransfer.getData('text/plain');
+
+                // Buscamos quien es la persona a la que se le esta asignando las exclusiones
                 const dador = datosIntercambio.participantes.find(p => p.id === idActivo);
                 
+                // Validacion para saber que existe y que no se encuentra en la lista negra
                 if (idDrop && !dador.exclusiones.includes(idDrop)) {
                     dador.exclusiones.push(idDrop);
                     sincronizarDatos();
@@ -191,7 +195,6 @@ function cargarPaginaExclusiones() {
     renderizarExclusiones();
 }
 
-// Esta se la pedi a gemini, para manejar las exclusiones xd 
 function verificarConsistenciaReglas() {
     const total = datosIntercambio.participantes.length;
     
